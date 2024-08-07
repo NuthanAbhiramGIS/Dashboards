@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ISS GeoJSON</title>
+</head>
+<body>
+    <h1>ISS GeoJSON</h1>
+    <pre id="geojson"></pre>
+    <script>
+        async function fetchISSData() {
+            const response = await fetch('https://api.wheretheiss.at/v1/satellites/25544');
+            const data = await response.json();
+            const geojson = {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [data.longitude, data.latitude]
+                        },
+                        "properties": {
+                            "name": "ISS",
+                            "timestamp": new Date(data.timestamp * 1000).toISOString()
+                        }
+                    }
+                ]
+            };
+            document.getElementById('geojson').textContent = JSON.stringify(geojson, null, 2);
+        }
+
+        fetchISSData();
+    </script>
+</body>
+</html>
